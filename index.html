@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<script type="text/javascript" src="script/canvasjs.min.js"></script>
+<script type="text/javascript" src="script/MathJS.js"></script>  
+<script type="text/javascript" src="script/plotting.js"></script>  
+<script>
+
+window.onload = function () {
+	my_chart = new MyChart("chartContainer");
+	my_chart.chartTitle = "R6s alphapack Distribution";
+	my_chart.plotDistribution(0.02, 0.015, 0.5);
+	my_chart2 = new MyChart("chartProbability");
+	my_chart2.dataLineColor = "blue";
+	my_chart2.stripLineColor = "orange";
+	my_chart2.chartTitle = "R6s alphapack Probability";
+	my_chart2.plotProbability(0.02, 0.015, 0.5);
+	updateSliderInput(50);
+}
+
+function calculate(){
+	var add_win = document.getElementsByName('add_win')[0].value;
+	var add_loss = document.getElementsByName('add_loss')[0].value;
+	var win = document.getElementsByName('rangeInput')[0].value/100;
+	
+	my_chart2.plotProbability(add_win, add_loss, win);
+	my_chart.plotDistribution(add_win, add_loss, win);	
+}
+
+function updateTextInput(val) {
+    document.getElementById('textInput').value=val; 
+}
+
+function updateSliderInput(val) {
+	if (val == ""){
+		document.getElementsByName('rangeInput')[0].value = 0; 
+	}
+	else if (isNaN(val) == true)
+		document.getElementById('textInput').value=document.getElementsByName('rangeInput')[0].value; 
+	else{
+		document.getElementsByName('rangeInput')[0].value=val; 
+		document.getElementById('textInput').value=document.getElementsByName('rangeInput')[0].value; 
+	}
+}
+
+</script>
+</head>
+<body>
+<div id="chartContainer" style="height: 400px; width: 100%;">
+</div>
+<div>
+	<input name = "add_win" value="0.02"></input>
+	<input name = "add_loss" value="0.015"></input>
+	<input type="range" name="rangeInput" min="0" max="100" onmousemove="updateTextInput(this.value);">
+	<input type="text" id="textInput" value="" onkeyup = "updateSliderInput(this.value);" style="width: 25px;">
+	<button onclick = "calculate()">Calculate</button>
+</div>
+<div>
+	<p style="display:inline">Add to percent (WIN)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+	<p style="display:inline">Add to percent (LOSE)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+	<p style="display:inline">WINRATE</p>
+</div>
+<body>
+<div id="chartProbability" style="height: 400px; width: 100%;">
+</div>
+</body>
+</html>
