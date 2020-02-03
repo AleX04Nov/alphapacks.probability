@@ -7,21 +7,20 @@
 <script>
 
 window.onload = function () {
+	updateSliderInput(50);
 	my_chart = new MyChart("chartContainer");
 	my_chart.chartTitle = "R6s alphapack Distribution";
-	my_chart.plotDistribution(0.02, 0.015, 0.5);
 	my_chart2 = new MyChart("chartProbability");
 	my_chart2.dataLineColor = "blue";
 	my_chart2.stripLineColor = "orange";
 	my_chart2.chartTitle = "R6s alphapack Probability";
-	my_chart2.plotProbability(0.02, 0.015, 0.5);
-	updateSliderInput(50);
+	calculate();
 }
 
 function calculate(){
 	var add_win = document.getElementsByName('add_win')[0].value;
 	var add_loss = document.getElementsByName('add_loss')[0].value;
-	var win = document.getElementsByName('rangeInput')[0].value/100;
+	var win = document.getElementsByName('rangeInput')[0].value / 100;
 	
 	my_chart2.plotProbability(add_win, add_loss, win);
 	my_chart.plotDistribution(add_win, add_loss, win);	
@@ -38,7 +37,7 @@ function updateSliderInput(val) {
 	else if (isNaN(val) == true)
 		document.getElementById('textInput').value=document.getElementsByName('rangeInput')[0].value; 
 	else{
-		document.getElementsByName('rangeInput')[0].value=val; 
+		document.getElementsByName('rangeInput')[0].value = val; 
 		document.getElementById('textInput').value=document.getElementsByName('rangeInput')[0].value; 
 	}
 }
@@ -51,7 +50,7 @@ function updateSliderInput(val) {
 <div>
 	<input name = "add_win" value="0.02"></input>
 	<input name = "add_loss" value="0.015"></input>
-	<input type="range" name="rangeInput" min="0" max="100" onmousemove="updateTextInput(this.value);">
+	<input type="range" name="rangeInput" min="0" max="100" onmousemove="updateTextInput(this.value);" onchange = "updateTextInput(this.value);">
 	<input type="text" id="textInput" value="" onkeyup = "updateSliderInput(this.value);" style="width: 25px;">
 	<button onclick = "calculate()">Calculate</button>
 </div>

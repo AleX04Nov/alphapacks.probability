@@ -1,3 +1,5 @@
+/////////////////////
+//function to get rounded number till EXP symbols
 (function() {
   /**
    * Корректировка округления десятичных дробей.
@@ -45,8 +47,11 @@
     };
   }
 })();
+/////////////////////
 
 
+////
+//two functions to get number of combinations r nums from n
 function product_Range(a,b) {
   var prd = a,i = a;
  
@@ -69,14 +74,19 @@ function combinations(n, r)
     return product_Range(r+1, n)/product_Range(1,n-r);
   }
 }
+////
 
-
+///////////////////////
+//Optimized function to get probability (x matches till alphapack win). May be slightly unaccurate, but it is still the best solution in therms of "speed/accuracy"
 function alpha_pack2(x, add_win, add_loss, win){
 	var main_list = Array.from({length: x}, (v, k) => k+1); 
 	var global_probability = 0;
 	var delta_chances = add_win - add_loss;
 	for (var i = 0; i <= x; i++){
 		probability = 0;
+		// Need to get i middle elements from main_list array
+		//If len(array)/i == even/even or odd/odd - will be only 1 element in indexes_arr
+		//in other case - there will be 2 elements.
 		if ( (x & 1) == 1){
 			if ( (i & 1) == 1)
 				var indexes_arr = [main_list.slice( ((x / 2) >> 0) - ((i / 2) >> 0), ((x / 2) >> 0) + ((i / 2) >> 0) + 1 )];
@@ -89,11 +99,11 @@ function alpha_pack2(x, add_win, add_loss, win){
 			else
 				var indexes_arr = [main_list.slice( ((x / 2) >> 0) - ((i / 2) >> 0) - 1, ((x / 2) >> 0) + ((i / 2) >> 0)), main_list.slice( ((x / 2) >> 0) - ((i / 2) >> 0), ((x / 2) >> 0) + ((i / 2) >> 0) + 1)];
 		}
-		if (i == 0)
-			indexes_arr = [[]];
 		for (var j = 0; j < indexes_arr.length; j++){
 			var local_probability = 1;
 			var elem = indexes_arr[j];
+			//we need to calculate only those events, when player has won, but lost an alphapack.
+			//If player has lost the match - we dont care => local_probability = 1 => we have no need to calculate it
 			for (var k = 0; k < elem.length; k++){
 				var chance = (elem[k] * add_loss) + ((k + 1) * delta_chances);
 				local_probability *= 1 - chance;
@@ -104,8 +114,11 @@ function alpha_pack2(x, add_win, add_loss, win){
 			}
 			probability += local_probability;
 		}
-		
-		global_probability += probability/(indexes_arr.length) * (Math.pow(win, i)) * (Math.pow(1 - win, x - i)) * (Math.min((x + 1) * add_loss + (i + 1) * delta_chances, 1)) * win * combinations(x, i);
+		//Usual "Probability theory" case. We multiply our probability summ on probability of (i matches won from x matches). 
+		//After that we multiply on number of all posible combinations of (i matches won from x matches).
+		//Then we multiply our result on probability of winning alphapack after x match. (Of course we need to won the match firstly)
+		global_probability += probability/(indexes_arr.length) * (Math.pow(win, i)) * (Math.pow(1 - win, x - i)) * combinations(x, i) * (Math.min((x + 1) * add_loss + (i + 1) * delta_chances, 1)) * win;
 	}
 	return global_probability
 }
+///////////////////////
